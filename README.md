@@ -1,13 +1,13 @@
-# Photon Skill
+# Generating Photon MCPs Skill
 
 Claude skill for generating single-file TypeScript MCPs for the Photon runtime.
 
 ## Installation
 
-1. Download `photon.zip`
+1. Download `generating-photon-mcps.zip`
 2. Install in Claude Desktop or Claude Code:
-   - Claude Desktop: Add to skills directory
-   - Claude Code: Use slash command `/skill install photon.zip`
+   - Claude Desktop: Click "Upload skill" and select the ZIP file
+   - Claude Code: Use slash command `/skill install generating-photon-mcps.zip`
 
 ## What This Skill Does
 
