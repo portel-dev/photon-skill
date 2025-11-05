@@ -14,12 +14,25 @@ Claude skill for generating single-file TypeScript MCPs for the Photon runtime.
 /plugin install generating-photon-mcps@photon-skills
 ```
 
-### Option 2: Manual Installation
+### Option 2: Manual Installation (Claude Desktop)
 
-1. Download `generating-photon-mcps.zip`
-2. Install in Claude Desktop or Claude Code:
-   - **Claude Desktop**: Click "Upload skill" and select the ZIP file
-   - **Claude Code**: Use slash command `/skill install generating-photon-mcps.zip`
+1. Download `generating-photon-mcps.zip` from [GitHub Releases](https://github.com/portel-dev/photon-skill/releases)
+2. In Claude Desktop, click "Upload skill" and select the ZIP file
+
+### Option 3: Build from Source
+
+```bash
+# Clone the repository
+git clone https://github.com/portel-dev/photon-skill.git
+cd photon-skill
+
+# Package the skill (requires skill-creator tools)
+python /path/to/skill-creator/scripts/package_skill.py ./generating-photon-mcps .
+
+# Install the generated ZIP
+# Claude Desktop: Upload generating-photon-mcps.zip
+# Claude Code: /skill install generating-photon-mcps.zip
+```
 
 ## What This Skill Does
 
@@ -91,10 +104,19 @@ Generated `.photon.ts` files are pure TypeScript classes that work with:
 
 To modify this skill:
 
-1. Edit `photon/SKILL.md` for main instructions
-2. Update `photon/references/patterns.md` for implementation patterns
-3. Update `photon/references/restler-integration.md` for multi-runtime usage
-4. Repackage with `package_skill.py`
+1. Edit `generating-photon-mcps/SKILL.md` for main instructions
+2. Update `generating-photon-mcps/references/patterns.md` for implementation patterns
+3. Update `generating-photon-mcps/references/restler-integration.md` for multi-runtime usage
+4. Test changes locally
+5. Create a new release with packaged ZIP:
+   ```bash
+   # Package the skill
+   python /path/to/skill-creator/scripts/package_skill.py ./generating-photon-mcps .
+
+   # Create GitHub release and attach generating-photon-mcps.zip
+   ```
+
+**Note:** ZIP files are not committed to the repository (see `.gitignore`). They are distributed via GitHub Releases for manual installation.
 
 ## License
 
