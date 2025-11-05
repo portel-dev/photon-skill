@@ -37,7 +37,10 @@ Every `.photon.ts` file should start with a comprehensive JSDoc header:
  * - paramName: Description (default: value)
  * - paramName2: Description (default: value)
  *
- * Dependencies: package-name (or None if no external deps)
+ * Dependencies are auto-installed on first run.
+ *
+ * @dependencies package-name@^1.0.0
+ * @dependencies another-package@^2.0.0, optional-package@^3.0.0
  *
  * @version 1.0.0
  * @author Portel
