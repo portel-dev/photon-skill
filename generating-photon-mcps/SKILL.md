@@ -93,7 +93,41 @@ Ensure the generated file follows these principles:
 - ✅ Use descriptive variable names
 - ✅ Extract helpers for repeated logic
 
-### Step 5: Provide Usage Instructions
+### Step 5: Add Dependencies (If Needed)
+
+If the MCP requires external npm packages, add `@dependencies` JSDoc tags:
+
+```typescript
+/**
+ * GitHub MCP - GitHub API integration
+ *
+ * Dependencies are auto-installed on first run.
+ *
+ * @dependencies @octokit/rest@^20.0.0
+ * @dependencies axios@^1.6.0, date-fns@^3.0.0
+ */
+```
+
+**How auto-install works:**
+- Photon parses `@dependencies` tags from JSDoc
+- Auto-installs to `~/.cache/photon-mcp/dependencies/{mcp-name}/`
+- Works like `npx` or Python's `uv` - zero manual setup
+- Cached per MCP, isolated from other MCPs
+- Only installs once, reuses on subsequent runs
+
+**Formats:**
+- Single: `@dependencies axios@^1.0.0`
+- Multiple (one line): `@dependencies axios@^1.0.0, date-fns@^2.0.0`
+- Multiple (separate tags): `@dependencies axios@^1.0.0` + `@dependencies date-fns@^2.0.0`
+- Scoped packages: `@dependencies @octokit/rest@^3.1.0`
+
+**Prefer built-in modules when possible:**
+- Use `fs/promises` instead of external file libraries
+- Use `node:fetch` instead of axios (for simple requests)
+- Use `child_process` instead of external shell libraries
+- Only add external dependencies when they provide significant value
+
+### Step 6: Provide Usage Instructions
 
 After generating the file, provide:
 
@@ -112,6 +146,11 @@ After generating the file, provide:
    export MCP_NAME_PARAM_NAME="value"
    ```
 
+4. **Dependencies** (if any):
+   ```
+   Dependencies auto-install on first run: axios@^1.6.0, @octokit/rest@^20.0.0
+   ```
+
 ## Common MCP Types
 
 ### API Integration MCP
@@ -124,11 +163,20 @@ For GitHub, Jira, Slack, etc.:
 
 **Example structure:**
 ```typescript
+/**
+ * @dependencies @octokit/rest@^20.0.0
+ */
+import { Octokit } from '@octokit/rest';
+
 export default class GitHubMCP {
+  private octokit: Octokit;
+
   constructor(
     private token: string,
     private baseUrl: string = 'https://api.github.com'
-  ) {}
+  ) {
+    this.octokit = new Octokit({ auth: token, baseUrl });
+  }
 
   async listIssues(params: { repo: string; state?: string }) { }
   async createIssue(params: { repo: string; title: string; body: string }) { }
@@ -185,8 +233,15 @@ For SQLite or other databases:
 
 **Example structure:**
 ```typescript
+/**
+ * @dependencies better-sqlite3@^11.0.0
+ */
+import Database from 'better-sqlite3';
+import { join } from 'path';
+import { homedir } from 'os';
+
 export default class SqliteMCP {
-  private db?: Database;
+  private db?: Database.Database;
 
   constructor(private dbPath: string = join(homedir(), 'data.db')) {}
 
@@ -222,12 +277,12 @@ See `references/restler-integration.md` for details on multi-protocol deployment
 
 Before delivering a generated MCP, verify:
 
-- [ ] File header JSDoc is comprehensive
+- [ ] File header JSDoc is comprehensive with @dependencies tags if needed
 - [ ] All public methods have JSDoc with `@param` tags
 - [ ] Constructor parameters have sensible defaults
 - [ ] Security helpers are included (e.g., `_resolvePath` for filesystem)
 - [ ] Error handling returns `{ success: boolean, ... }` format
-- [ ] No external dependencies unless necessary (prefer built-in Node modules)
+- [ ] Dependencies declared with @dependencies tags (prefer built-in Node modules)
 - [ ] Lifecycle hooks (`onInitialize`, `onShutdown`) are used if needed
 - [ ] Private methods start with `_` or use `private` keyword
 - [ ] All tool methods are async
@@ -292,7 +347,7 @@ Guide for multi-protocol deployment with Restler-TS framework:
  * Configuration:
  * - defaultTimezone: Default timezone (default: system timezone)
  *
- * Dependencies: None
+ * Dependencies: None (uses built-in Intl API)
  *
  * @version 1.0.0
  * @author Portel

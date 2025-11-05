@@ -337,6 +337,9 @@ export default class Fetch {
 ### Pattern: SQLite Database MCP
 
 ```typescript
+/**
+ * @dependencies better-sqlite3@^11.0.0
+ */
 import Database from 'better-sqlite3';
 import { join } from 'path';
 import { homedir } from 'os';
