@@ -1,251 +1,89 @@
-# Photon Skill - AI-Powered MCP Generator
+# Photon Skill
 
-A Claude skill for generating production-ready Photon MCP files from natural language descriptions.
-
-## What This Skill Does
-
-Enables Claude to generate complete `.photon.ts` files (Model Context Protocol servers) in seconds, based on natural language descriptions.
-
-**Input:** "Create an MCP to manage my GitHub issues"
-**Output:** Complete, production-ready `github-issues.photon.ts` file
+Claude skill for generating single-file TypeScript MCPs for the Photon runtime.
 
 ## Installation
 
-### For Claude Desktop
+1. Download `photon.zip`
+2. Install in Claude Desktop or Claude Code:
+   - Claude Desktop: Add to skills directory
+   - Claude Code: Use slash command `/skill install photon.zip`
 
-1. Copy this folder to your Claude skills directory:
-```bash
-cp -r photon-skill ~/.claude/plugins/marketplaces/anthropic-agent-skills/
-```
+## What This Skill Does
 
-2. Restart Claude Desktop
+Enables rapid generation of production-quality `.photon.ts` files:
+- Creates complete MCP servers from simple requests
+- Includes security best practices (input validation, path traversal prevention)
+- Provides error handling patterns
+- Generates comprehensive JSDoc documentation
+- Uses smart platform-aware defaults
 
-3. The skill activates automatically when you request MCP generation
+## Usage
 
-### For Claude Code / CLI
+Simply ask Claude to create an MCP:
 
-The skill is automatically available when this repository is in your workspace.
+- "Create a GitHub Issues MCP"
+- "Build an MCP for file operations"
+- "Make an MCP that interacts with SQLite"
+- "Generate an MCP for time and date utilities"
 
-## Usage Examples
-
-### Example 1: Simple File Operations
-```
-User: Create an MCP to organize my Downloads folder
-```
-
-Claude generates a complete `downloads-organizer.photon.ts` with tools to:
-- List files by type
-- Move files to categorized folders
-- Delete old files
-- Search for files
-
-### Example 2: API Integration
-```
-User: Create an MCP for managing Notion pages
-```
-
-Claude generates `notion-manager.photon.ts` with:
-- Constructor requiring Notion API token
-- Tools for CRUD operations on pages
-- Database queries
-- Content formatting
-
-### Example 3: Automation
-```
-User: Build an MCP to backup my important folders daily
-```
-
-Claude generates `backup-manager.photon.ts` with:
-- Configurable source directories
-- Backup destination settings
-- Compression options
-- Scheduling utilities
+Claude will:
+1. Ask clarifying questions if needed
+2. Generate a complete `.photon.ts` file with proper structure
+3. Include security helpers and error handling
+4. Provide usage instructions
 
 ## What Gets Generated
 
-Every Photon MCP includes:
+Each generated `.photon.ts` file includes:
 
-✅ **Complete header documentation**
-- Description and use cases
-- Configuration parameters
-- Dependencies listing
+- **Comprehensive file header** with JSDoc
+- **Smart constructor defaults** (e.g., `~/Documents` for filesystem)
+- **Environment variable configuration** (automatically mapped)
+- **Security patterns** (directory traversal prevention, input validation)
+- **Error handling** with `{ success: boolean, ... }` format
+- **Lifecycle hooks** (`onInitialize`, `onShutdown`)
+- **Well-documented tools** with JSDoc and TypeScript types
 
-✅ **Type-safe constructor**
-- Smart defaults (~/Documents, API endpoints, etc.)
-- Validation logic
-- Environment variable mapping
+## Patterns Included
 
-✅ **Production-ready tools**
-- JSDoc documentation
-- TypeScript type safety
-- Error handling
-- Consistent return formats
+The skill includes reference patterns for:
 
-✅ **Helper methods**
-- Private methods (prefixed with `_`)
-- Reusable utilities
-- Security validation
+- **Filesystem operations** - Read, write, list, search, delete
+- **HTTP/API operations** - GET, POST, download, timeout handling
+- **Database operations** - SQLite with transactions
+- **Shell/Git operations** - Command execution with security
+- **Security best practices** - Input validation, command injection prevention
+- **Error handling** - Consistent error responses
+- **Configuration** - Smart defaults, environment variables
 
-✅ **Lifecycle hooks**
-- `onInitialize()` for setup
-- `onShutdown()` for cleanup
+## Framework-Agnostic Design
 
-## Generated File Structure
+Generated `.photon.ts` files are pure TypeScript classes that work with:
+- **Photon runtime** → MCP protocol (Claude Desktop, Cursor, Windsurf)
+- **Restler-TS runtime** → REST/GraphQL/WebSocket APIs
+- **Direct import** → Use as a library
 
-```typescript
-/**
- * [Name] - [Description]
- *
- * Configuration, use cases, dependencies documented here
- */
+## Example
 
-import { ... } from '...';
+**Request:** "Create an MCP for time operations"
 
-export default class MyTool {
-  constructor(
-    private config: string = defaultValue
-  ) {
-    // Validation
-  }
-
-  async onInitialize() {
-    // Setup
-  }
-
-  /**
-   * Tool description
-   * @param input Description
-   */
-  async toolName(params: { input: string }) {
-    // Implementation with error handling
-    return { success: true, result: ... };
-  }
-
-  private _helper() {
-    // Private utilities
-  }
-}
-```
-
-## Key Features
-
-### 🎯 AI-Optimized Patterns
-- Designed specifically for AI generation
-- Consistent conventions
-- Predictable structure
-- Clear documentation requirements
-
-### 🔒 Security Built-In
-- Path validation templates
-- Input sanitization patterns
-- API key handling
-- Whitelist-based command execution
-
-### 📦 Framework-Agnostic
-- No Photon-specific code in generated files
-- Pure TypeScript classes
-- Works with any runtime (MCP, CLI, REST, etc.)
-- Reusable as npm packages
-
-### ⚡ Instant Results
-- Complete MCP in one response
-- Copy-paste ready
-- Test immediately with `npx photon [name] --dev`
-- Deploy with `npx photon [name] --config`
-
-## Common Patterns Included
-
-The skill knows how to generate:
-
-### File System Operations
-- Path validation and security
-- Recursive directory traversal
-- File type detection
-- Glob pattern matching
-
-### HTTP/API Calls
-- RESTful API interactions
-- Authentication headers
-- Error handling
-- Response formatting
-
-### Database Operations
-- SQLite integration
-- Connection management
-- Prepared statements
-- Transaction handling
-
-### Shell Commands
-- Safe command execution
-- Output capture
-- Working directory handling
-- Async execution
-
-## Quality Standards
-
-Every generated file includes:
-
-- ✅ Complete TypeScript typing
-- ✅ JSDoc documentation on all public methods
-- ✅ Error handling in try-catch blocks
-- ✅ Security validation where needed
-- ✅ Consistent return formats ({ success, ... })
-- ✅ Smart default values in constructor
-- ✅ Clear, actionable error messages
-
-## Integration with Other Tools
-
-### Photon MCP Runtime
-```bash
-npx photon my-tool --dev      # Development mode
-npx photon my-tool --config   # Generate MCP config
-```
-
-### Restler-TS Framework
-Generated .photon.ts classes can be loaded by restler-ts to expose as:
-- REST APIs
-- GraphQL endpoints
-- JSON-RPC services
-- WebSocket servers
-
-### Direct Import
-```typescript
-import MyTool from './my-tool.photon.ts';
-
-const tool = new MyTool({ config: 'value' });
-const result = await tool.someMethod({ input: 'data' });
-```
-
-## Examples Gallery
-
-See the `examples/` directory for complete, working Photon MCPs:
-
-- `github-issues.photon.ts` - GitHub issue management
-- `file-organizer.photon.ts` - Smart file organization
-- `notion-tasks.photon.ts` - Notion database integration
-- `backup-manager.photon.ts` - Automated backup system
+**Result:** Complete `time.photon.ts` file with:
+- Timezone conversion
+- Date formatting
+- Relative time calculations
+- Smart defaults (system timezone)
+- Full JSDoc documentation
 
 ## Development
 
-This skill is part of the Photon ecosystem:
+To modify this skill:
 
-- **Photon Runtime**: [@portel/photon](https://github.com/portel-dev/photon-mcp)
-- **Photon Hub**: Community MCP registry (coming soon)
-- **Restler-TS**: Multi-protocol API framework
-
-## Contributing
-
-Contributions welcome! To improve the skill:
-
-1. Edit `SKILL.md` to add new patterns or examples
-2. Add example `.photon.ts` files to `examples/`
-3. Update documentation in README.md
-4. Test generation quality with various prompts
+1. Edit `photon/SKILL.md` for main instructions
+2. Update `photon/references/patterns.md` for implementation patterns
+3. Update `photon/references/restler-integration.md` for multi-runtime usage
+4. Repackage with `package_skill.py`
 
 ## License
 
-MIT © Portel
-
----
-
-**Built for the future of AI-powered development** 🚀
+MIT
