@@ -1,5 +1,5 @@
 ---
-name: photon
+name: generating-photon-mcps
 description: Generate single-file TypeScript MCPs for the Photon runtime. Use when users request creating an MCP, building an MCP server, or implementing Model Context Protocol tools. Triggers on phrases like "create a GitHub MCP", "build an MCP for file operations", or "make an MCP that does X".
 ---
 
