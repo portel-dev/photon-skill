@@ -1,6 +1,6 @@
 ---
 name: generating-photon-mcps
-description: Generate single-file TypeScript MCPs for the Photon runtime. Use when users request creating an MCP, building an MCP server, or implementing Model Context Protocol tools. Triggers on phrases like "create a GitHub MCP", "build an MCP for file operations", or "make an MCP that does X".
+description: Generate single-file TypeScript MCPs for any MCP client. Use when users request creating an MCP, building an MCP server, or implementing Model Context Protocol tools. Generates AI-friendly, production-ready code with security best practices, auto-installing dependencies, and fork-first design. Triggers on phrases like "create a GitHub MCP", "build an MCP for file operations", or "make an MCP that does X".
 ---
 
 # Photon MCP Generator
@@ -9,14 +9,24 @@ description: Generate single-file TypeScript MCPs for the Photon runtime. Use wh
 
 Generate production-quality `.photon.ts` files—single-file TypeScript classes that become full MCP servers when run with the Photon runtime.
 
-Photon uses **convention over configuration**:
+**Key Principles:**
+- **One file = Complete MCP** - Single file contains entire working MCP server
+- **AI-friendly code** - Optimized for AI understanding and modification
+- **Auto-dependencies** - Dependencies auto-install via `@dependencies` tags (like `npx` or `uv`)
+- **Fork-first design** - Easy to copy, customize, and modify
+- **MCP-client agnostic** - Works with Claude Desktop, Cursor, Zed, Continue, Cline, and any MCP client
+
+**Photon uses convention over configuration:**
 - One class → One MCP server
 - Public async methods → MCP tools
 - Constructor parameters → Environment variables
 - JSDoc comments → Tool descriptions
 - TypeScript types → JSON schemas
+- `@dependencies` tags → Auto-installed packages
 
 This skill enables rapid MCP creation: from idea to working MCP in under 60 seconds.
+
+---
 
 ## When to Use This Skill
 
@@ -26,6 +36,8 @@ Use this skill when the user requests:
 - "Make a GitHub Issues MCP"
 - "Generate an MCP for file operations"
 - Any request to build Model Context Protocol tools
+
+---
 
 ## Generation Workflow
 
@@ -42,7 +54,7 @@ Ask clarifying questions if needed:
 Select the appropriate pattern from `references/patterns.md`:
 - **Filesystem** - File/directory operations
 - **HTTP/API** - Web requests, API integration
-- **Database** - SQLite or other databases
+- **Database** - SQLite, PostgreSQL, MongoDB
 - **Shell/Git** - Command execution, git operations
 - **Custom** - Combine patterns as needed
 
@@ -50,7 +62,7 @@ Select the appropriate pattern from `references/patterns.md`:
 
 Create the `.photon.ts` file with:
 
-1. **File header** with comprehensive JSDoc
+1. **File header** with comprehensive JSDoc and `@dependencies` tags
 2. **Import statements** for required modules
 3. **Default export class** with descriptive name
 4. **Constructor** with smart defaults and configuration
@@ -58,7 +70,34 @@ Create the `.photon.ts` file with:
 6. **Public async tool methods** with JSDoc and types
 7. **Private helper methods** for shared logic
 
-### Step 4: Apply Best Practices
+### Step 4: Apply AI-Friendly Code Principles
+
+Generate code optimized for AI understanding and modification:
+
+**Clear Structure:**
+- ✅ Consistent file organization (header → imports → class → methods)
+- ✅ One file = complete context for AI
+- ✅ No scattered dependencies or hidden complexity
+- ✅ Explicit types throughout (no `any` unless necessary)
+
+**Readable Naming:**
+- ✅ Descriptive method names that explain intent
+- ✅ Clear variable names (avoid abbreviations)
+- ✅ Method names map directly to user actions
+
+**Self-Documenting:**
+- ✅ Comprehensive JSDoc for AI to understand purpose
+- ✅ Parameter descriptions become tool metadata
+- ✅ Examples in JSDoc when helpful
+- ✅ Type signatures that document expected inputs/outputs
+
+**Modular and Composable:**
+- ✅ One tool method = one focused operation
+- ✅ Extract private helpers for reused logic
+- ✅ Keep methods under 50 lines
+- ✅ Clear separation of concerns
+
+### Step 5: Apply Security Best Practices
 
 Ensure the generated file follows these principles:
 
@@ -93,18 +132,19 @@ Ensure the generated file follows these principles:
 - ✅ Use descriptive variable names
 - ✅ Extract helpers for repeated logic
 
-### Step 5: Add Dependencies (If Needed)
+### Step 6: Add Auto-Installing Dependencies
 
-If the MCP requires external npm packages, add `@dependencies` JSDoc tags:
+**IMPORTANT**: Dependencies auto-install via `@dependencies` JSDoc tags.
+
+Add `@dependencies` tags in the file header JSDoc:
 
 ```typescript
 /**
  * GitHub MCP - GitHub API integration
  *
- * Dependencies are auto-installed on first run.
+ * Dependencies are auto-installed on first run (like npx or uv).
  *
  * @dependencies @octokit/rest@^20.0.0
- * @dependencies axios@^1.6.0, date-fns@^3.0.0
  */
 ```
 
@@ -127,29 +167,78 @@ If the MCP requires external npm packages, add `@dependencies` JSDoc tags:
 - Use `child_process` instead of external shell libraries
 - Only add external dependencies when they provide significant value
 
-### Step 6: Provide Usage Instructions
+### Step 7: Enable Fork-First Customization
+
+Design generated code for easy forking and customization:
+
+**Modularity:**
+- Clear separation between core logic and customizable parts
+- Configuration in constructor (easy to modify)
+- Well-documented extension points
+
+**Documentation for Forking:**
+Include in file header:
+```typescript
+/**
+ * Customization:
+ * To add company-specific authentication:
+ *   1. Copy this file: cp jira.photon.ts company-jira.photon.ts
+ *   2. Modify the constructor to add custom auth
+ *   3. Run: photon mcp company-jira
+ */
+```
+
+**Common Fork Scenarios:**
+- Adding custom authentication
+- Extending with company-specific fields
+- Combining multiple photons
+- Adding workflow-specific logic
+
+### Step 8: Provide Usage Instructions
 
 After generating the file, provide:
 
 1. **How to run it:**
    ```bash
-   photon <mcp-name> --dev
+   # Development mode (hot reload)
+   photon mcp <name> --dev
+
+   # Production mode
+   photon mcp <name>
    ```
 
-2. **How to configure it:**
+2. **How to get MCP client config:**
    ```bash
-   photon <mcp-name> --config
+   photon get <name> --mcp
    ```
+   Add output to MCP client configuration. Works with:
+   - Claude Desktop (Anthropic)
+   - Cursor (IDE)
+   - Zed (IDE)
+   - Continue (VS Code extension)
+   - Cline (VS Code extension)
+   - Any MCP-compatible client
 
 3. **Environment variables needed** (if any):
    ```bash
-   export MCP_NAME_PARAM_NAME="value"
+   export <MCP_NAME>_<PARAM>=value
    ```
 
 4. **Dependencies** (if any):
    ```
    Dependencies auto-install on first run: axios@^1.6.0, @octokit/rest@^20.0.0
    ```
+
+5. **Fork and customize workflow**:
+   ```bash
+   # Copy to customize
+   cp ~/.photon/<name>.photon.ts ~/.photon/my-<name>.photon.ts
+   # Edit my-<name>.photon.ts
+   # Run customized version
+   photon mcp my-<name>
+   ```
+
+---
 
 ## Common MCP Types
 
@@ -174,8 +263,10 @@ export default class GitHubMCP {
   constructor(
     private token: string,
     private baseUrl: string = 'https://api.github.com'
-  ) {
-    this.octokit = new Octokit({ auth: token, baseUrl });
+  ) {}
+
+  async onInitialize() {
+    this.octokit = new Octokit({ auth: this.token, baseUrl: this.baseUrl });
   }
 
   async listIssues(params: { repo: string; state?: string }) { }
@@ -210,22 +301,34 @@ For reading, writing, searching files:
 
 **Example structure:**
 ```typescript
+import { join } from 'path';
+import { homedir } from 'os';
+
 export default class FilesystemMCP {
   constructor(
     private workdir: string = join(homedir(), 'Documents'),
-    private maxFileSize: number = 10485760
+    private maxFileSize: number = 10485760 // 10MB
   ) {}
 
   async read(params: { path: string }) { }
   async write(params: { path: string; content: string }) { }
   async list(params: { path?: string; recursive?: boolean }) { }
   async search(params: { pattern: string; path?: string }) { }
+
+  // Security helper
+  private _resolvePath(userPath: string): string {
+    const resolved = join(this.workdir, userPath);
+    if (!resolved.startsWith(this.workdir)) {
+      throw new Error('Path traversal attempt detected');
+    }
+    return resolved;
+  }
 }
 ```
 
 ### Database MCP
 
-For SQLite or other databases:
+For SQLite, PostgreSQL, MongoDB:
 - Use database pattern from `references/patterns.md`
 - Initialize connection in `onInitialize()`
 - Close connection in `onShutdown()`
@@ -247,53 +350,182 @@ export default class SqliteMCP {
 
   async onInitialize() {
     this.db = new Database(this.dbPath);
+    console.error('[sqlite] ✅ Connected to database');
   }
 
   async onShutdown() {
     this.db?.close();
+    console.error('[sqlite] ✅ Connection closed');
   }
 
   async query(params: { sql: string; params?: any[] }) { }
   async execute(params: { sql: string; params?: any[] }) { }
+  async transaction(params: { statements: Array<{ sql: string; params?: any[] }> }) { }
 }
 ```
 
-## Framework-Agnostic Design
+---
 
-Photon files are pure TypeScript classes with **no framework dependencies**. This enables deployment flexibility:
+## MCP Client Compatibility
 
-- **Photon runtime** → MCP protocol (Claude Desktop, Cursor, Windsurf)
-- **Restler-TS runtime** → REST/GraphQL/WebSocket APIs
-- **Direct import** → Use as a library
+Generated `.photon.ts` files are pure TypeScript classes that work with **any MCP client**.
 
-See `references/restler-integration.md` for details on multi-protocol deployment.
+### Running as MCP Server
 
-**Guidelines:**
-- No Photon-specific code in `.photon.ts` files
-- Use standard TypeScript patterns
-- Keep classes reusable across runtimes
+```bash
+# Development mode (hot reload)
+photon mcp github-issues --dev
+
+# Production mode
+photon mcp github-issues
+
+# Get config for your MCP client
+photon get github-issues --mcp
+```
+
+### Compatible MCP Clients
+
+- **Claude Desktop** (Anthropic)
+- **Cursor** (IDE)
+- **Zed** (IDE)
+- **Continue** (VS Code extension)
+- **Cline** (VS Code extension)
+- Any MCP-compatible client implementing the Model Context Protocol
+
+### Guidelines for Portable Code
+
+Generate clean, standard TypeScript to ensure compatibility across MCP clients:
+
+- ✅ Use standard TypeScript patterns
+- ✅ No runtime-specific code or decorators
+- ✅ Pure business logic, no protocol handling
+- ✅ Let Photon runtime handle MCP protocol details
+
+---
+
+## AI-Friendly Code Principles
+
+Generate code optimized for AI agents to understand, analyze, and modify:
+
+### Complete Context in One File
+
+**Why it matters:**
+- AI can load entire MCP in single context window
+- No jumping between files to understand logic
+- Full picture available for analysis and suggestions
+
+**How to achieve:**
+```typescript
+// Single file contains everything:
+// - Configuration (constructor)
+// - Dependencies (@dependencies tags)
+// - Business logic (methods)
+// - Security helpers (private methods)
+// - Documentation (JSDoc)
+```
+
+### Self-Documenting Code
+
+**Comprehensive JSDoc:**
+```typescript
+/**
+ * Create a new issue in the repository
+ *
+ * This tool creates GitHub issues with optional labels and assignees.
+ * Requires repository write access.
+ *
+ * @param title Issue title (required)
+ * @param body Issue description in markdown (optional)
+ * @param labels Array of label names to apply (optional)
+ * @param assignees Array of GitHub usernames to assign (optional)
+ * @returns Issue creation result with issue number and URL
+ */
+async createIssue(params: {
+  title: string;
+  body?: string;
+  labels?: string[];
+  assignees?: string[];
+}) {
+  // Implementation
+}
+```
+
+**Type Signatures as Documentation:**
+```typescript
+// Good: Types tell the story
+async query(params: { sql: string; params?: any[] }): Promise<{ success: boolean; rows?: any[]; error?: string }>
+
+// Bad: Unclear what's returned
+async query(params: any): Promise<any>
+```
+
+### Consistent Patterns
+
+**Error Handling:**
+```typescript
+// Always return { success: boolean, ... }
+return { success: true, data: result };
+return { success: false, error: 'User-friendly message' };
+```
+
+**Naming Conventions:**
+```typescript
+// Public tools: async methods
+async createIssue() { }
+async listIssues() { }
+
+// Private helpers: underscore prefix
+private _validateInput() { }
+private _resolvePath() { }
+```
+
+### Modular Structure
+
+Break complex operations into well-named helpers:
+
+```typescript
+async processLargeFile(params: { path: string }) {
+  const content = await this._readFile(params.path);
+  const validated = this._validateContent(content);
+  const transformed = this._transformData(validated);
+  return this._formatOutput(transformed);
+}
+
+// AI can easily understand each step
+private async _readFile(path: string) { }
+private _validateContent(content: string) { }
+private _transformData(data: any) { }
+private _formatOutput(result: any) { }
+```
+
+---
 
 ## Quality Checklist
 
 Before delivering a generated MCP, verify:
 
-- [ ] File header JSDoc is comprehensive with @dependencies tags if needed
+- [ ] File header JSDoc is comprehensive with `@dependencies` tags if needed
 - [ ] All public methods have JSDoc with `@param` tags
 - [ ] Constructor parameters have sensible defaults
 - [ ] Security helpers are included (e.g., `_resolvePath` for filesystem)
 - [ ] Error handling returns `{ success: boolean, ... }` format
-- [ ] Dependencies declared with @dependencies tags (prefer built-in Node modules)
+- [ ] Dependencies declared with `@dependencies` tags (prefer built-in Node modules)
 - [ ] Lifecycle hooks (`onInitialize`, `onShutdown`) are used if needed
 - [ ] Private methods start with `_` or use `private` keyword
 - [ ] All tool methods are async
 - [ ] TypeScript types are explicit and complete
+- [ ] Code is AI-friendly (clear structure, self-documenting)
+- [ ] Fork-first design (easy to customize)
+- [ ] MCP-client agnostic language in comments/docs
+
+---
 
 ## Resources
 
 ### references/patterns.md
 
 Comprehensive patterns for common MCP operations:
-- File header format
+- File header format with `@dependencies` tags
 - Filesystem operations with security
 - HTTP/API operations with timeout handling
 - Database operations with connection management
@@ -304,16 +536,7 @@ Comprehensive patterns for common MCP operations:
 
 **When to use:** Always consult this file for implementation patterns.
 
-### references/restler-integration.md
-
-Guide for multi-protocol deployment with Restler-TS framework:
-- How to use Photon files as REST APIs
-- GraphQL integration
-- WebSocket support
-- Direct library usage
-- Benefits of framework-agnostic design
-
-**When to use:** When user asks about using MCP in other ways or exposing as an API.
+---
 
 ## Anti-Patterns to Avoid
 
@@ -325,6 +548,11 @@ Guide for multi-protocol deployment with Restler-TS framework:
 ❌ **Don't hardcode paths** - Use `homedir()` and smart defaults
 ❌ **Don't skip JSDoc** - Documentation becomes MCP metadata
 ❌ **Don't ignore lifecycle** - Use `onShutdown` for cleanup
+❌ **Don't scatter logic** - Keep everything in one file
+❌ **Don't use `any` types** - Be explicit for AI understanding
+❌ **Don't mention "Claude"** - Use "MCP client" or "AI assistant" instead
+
+---
 
 ## Example Generation
 
@@ -349,6 +577,12 @@ Guide for multi-protocol deployment with Restler-TS framework:
  *
  * Dependencies: None (uses built-in Intl API)
  *
+ * Customization:
+ * To add custom date formats:
+ *   1. Copy this file: cp time.photon.ts my-time.photon.ts
+ *   2. Add new format methods
+ *   3. Run: photon mcp my-time
+ *
  * @version 1.0.0
  * @author Portel
  * @license MIT
@@ -360,8 +594,7 @@ export default class Time {
   ) {}
 
   async onInitialize() {
-    console.error(`[time] ✅ Initialized`);
-    console.error(`[time] Default timezone: ${this.defaultTimezone}`);
+    console.error(`[time] ✅ Initialized with timezone: ${this.defaultTimezone}`);
   }
 
   /**
@@ -399,40 +632,84 @@ export default class Time {
         timezone: params.timezone,
       };
     } catch (error: any) {
+      console.error('[time] Conversion failed:', error);
       return { success: false, error: error.message };
     }
   }
 
   /**
-   * Format timestamp with custom format
+   * Calculate relative time from now
    * @param timestamp ISO 8601 timestamp
-   * @param format Format string (e.g., "YYYY-MM-DD")
    */
-  async format(params: { timestamp: string; format: string }) {
-    // Implementation here
+  async relative(params: { timestamp: string }) {
+    try {
+      const date = new Date(params.timestamp);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+
+      const seconds = Math.floor(diffMs / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+
+      return {
+        success: true,
+        relative: this._formatRelative(days, hours, minutes, seconds),
+        exactDiffMs: diffMs,
+      };
+    } catch (error: any) {
+      console.error('[time] Relative calculation failed:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Private helper for formatting relative time
+  private _formatRelative(days: number, hours: number, minutes: number, seconds: number): string {
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    return `${seconds} second${seconds !== 1 ? 's' : ''} ago`;
   }
 }
 ```
 
 **Usage instructions provided:**
 ```bash
-# Run in dev mode
-photon time --dev
+# Run in development mode (hot reload)
+photon mcp time --dev
 
-# Generate config for Claude Desktop
-photon time --config
+# Run in production mode
+photon mcp time
+
+# Get MCP client configuration
+photon get time --mcp
+# Add output to your MCP client's config file
 
 # Configure timezone (optional)
 export TIME_DEFAULT_TIMEZONE="America/Los_Angeles"
+
+# Fork and customize
+cp ~/.photon/time.photon.ts ~/.photon/my-time.photon.ts
+# Edit my-time.photon.ts to add custom formats
+photon mcp my-time
 ```
+
+**Dependencies:** None (uses built-in Intl API)
+
+---
 
 ## Summary
 
 Generate production-quality Photon MCPs by:
 1. Understanding user requirements
 2. Choosing appropriate patterns from `references/patterns.md`
-3. Generating complete `.photon.ts` file with security and error handling
-4. Providing clear usage instructions
+3. Generating complete `.photon.ts` file with:
+   - AI-friendly, self-documenting code
+   - Security best practices and error handling
+   - Auto-installing dependencies via `@dependencies`
+   - Fork-first design for easy customization
+   - MCP-client agnostic implementation
+4. Providing clear usage instructions for any MCP client
 5. Verifying against quality checklist
 
-Keep files framework-agnostic, secure, well-documented, and focused on single responsibilities.
+Keep files framework-agnostic, secure, well-documented, AI-friendly, and focused on single responsibilities.
