@@ -238,6 +238,22 @@ After generating the file, provide:
    photon mcp my-<name>
    ```
 
+6. **Publishing to marketplace** (optional):
+   ```bash
+   # Create a marketplace from your photons
+   photon sync marketplace --claude-code
+
+   # This enables distribution via:
+   # - Photon CLI: photon marketplace add org/repo
+   # - Claude Code: /plugin marketplace add org/repo
+   ```
+
+   The `--claude-code` flag generates both:
+   - `.marketplace/photons.json` - Photon CLI marketplace manifest
+   - `.claude-plugin/marketplace.json` - Claude Code plugin manifest
+
+   Push to GitHub and users can install your photons via either method.
+
 ---
 
 ## Common MCP Types

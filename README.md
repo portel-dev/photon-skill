@@ -335,6 +335,44 @@ photon mcp company-jira
 
 ---
 
+## Creating Your Own Marketplace
+
+Once you've generated several photons, you can publish them as a marketplace:
+
+### For Photon CLI Users
+
+```bash
+# Organize your photons
+mkdir my-photons && cd my-photons
+cp ~/.photon/*.photon.ts .
+
+# Generate marketplace
+photon sync marketplace --name "My Photons" --owner "Your Name"
+
+# Push to GitHub
+git init && git add . && git commit -m "Initial marketplace"
+git push origin main
+```
+
+### For Claude Code Users
+
+Add `--claude-code` flag to also generate a Claude Code plugin:
+
+```bash
+# Generate marketplace + Claude Code plugin
+photon sync marketplace --claude-code
+
+# Users can install via CLI or Claude Code
+# CLI: photon marketplace add your-org/your-photons
+# Claude Code: /plugin marketplace add your-org/your-photons
+```
+
+**Result:** Your generated photons are now distributable via both Photon CLI and Claude Code plugin manager.
+
+**Documentation:** See [photon-mcp repository](https://github.com/portel-dev/photon-mcp#marketplace-system) for detailed marketplace creation guide.
+
+---
+
 ## Development
 
 To modify this skill:
@@ -361,7 +399,7 @@ Contributions welcome! Submit issues and PRs at [github.com/portel-dev/photon-sk
 ## Related Projects
 
 - **[photon-mcp](https://github.com/portel-dev/photon-mcp)** - Photon runtime for MCP servers
-- **[photons](https://github.com/portel-dev/photons)** - Official marketplace with 16+ production-ready photons
+- **[photons](https://github.com/portel-dev/photons)** - Official marketplace with 17 production-ready photons
 
 ---
 
