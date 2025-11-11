@@ -81,9 +81,11 @@ Generate code optimized for AI understanding and modification:
 - ✅ Explicit types throughout (no `any` unless necessary)
 
 **Readable Naming:**
-- ✅ Descriptive method names that explain intent
+- ✅ **Concise method names** (avoid repeating photon name)
+- ✅ **CLI-friendly** (reads naturally: `photon cli time current`)
 - ✅ Clear variable names (avoid abbreviations)
 - ✅ Method names map directly to user actions
+- ✅ Use standard CRUD verbs (get, list, create, update, delete)
 
 **Self-Documenting:**
 - ✅ Comprehensive JSDoc for AI to understand purpose
@@ -485,15 +487,77 @@ return { success: false, error: 'User-friendly message' };
 ```
 
 **Naming Conventions:**
-```typescript
-// Public tools: async methods
-async createIssue() { }
-async listIssues() { }
 
+Photons are used both as MCP servers and CLI tools. Method names should be **concise and CLI-friendly**.
+
+**Core Principle: Avoid Redundancy**
+The photon/class name provides context, so don't repeat it in method names:
+
+```typescript
+// ❌ BAD - Redundant with class name
+export default class Time {
+  async getCurrentTime() { }
+  async convertTime() { }
+  async listTimezones() { }
+}
+// CLI: photon cli time getCurrentTime  (verbose and redundant)
+
+// ✅ GOOD - Concise, context is clear
+export default class Time {
+  async current() { }
+  async convert() { }
+  async timezones() { }
+}
+// CLI: photon cli time current  (clean and natural)
+```
+
+**Standard CRUD Verbs:**
+- Create: `create`, `add`, `new`
+- Read: `get`, `list`, `find`, `search`
+- Update: `update`, `set`, `modify`
+- Delete: `delete`, `remove`, `clear`
+
+**Singular vs Plural:**
+- Singular for single items: `user()`, `get()`, `delete()`
+- Plural for collections: `users()`, `list()`, `clear()`
+
+**Examples:**
+```typescript
+// Resource-based photons
+export default class Docker {
+  async containers() { }     // List all
+  async images() { }          // List all
+  async start() { }           // Start container
+  async stop() { }            // Stop container
+  async remove() { }          // Remove container
+}
+
+// Service-based photons
+export default class Slack {
+  async post() { }            // Post message
+  async channels() { }        // List channels
+  async history() { }         // Channel history
+  async search() { }          // Search messages
+}
+
+// Utility photons
+export default class Math {
+  async calculate() { }       // Calculate expression
+  async random() { }          // Random number
+}
+```
+
+**Private Helpers:**
+```typescript
 // Private helpers: underscore prefix
 private _validateInput() { }
 private _resolvePath() { }
 ```
+
+**Test Your Names:**
+Say the CLI command out loud - does it sound natural?
+- ✅ `photon cli time current --timezone "America/New_York"`
+- ❌ `photon cli time getCurrentTime --timezone "America/New_York"`
 
 ### Modular Structure
 
