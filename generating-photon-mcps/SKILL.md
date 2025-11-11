@@ -82,7 +82,7 @@ Generate code optimized for AI understanding and modification:
 
 **Readable Naming:**
 - ✅ **Concise method names** (avoid repeating photon name)
-- ✅ **CLI-friendly** (reads naturally: `photon cli time current`)
+- ✅ **Natural to call** (reads well: `time.current()` or `photon cli time current`)
 - ✅ Clear variable names (avoid abbreviations)
 - ✅ Method names map directly to user actions
 - ✅ Use standard CRUD verbs (get, list, create, update, delete)
@@ -488,7 +488,7 @@ return { success: false, error: 'User-friendly message' };
 
 **Naming Conventions:**
 
-Photons are used both as MCP servers and CLI tools. Method names should be **concise and CLI-friendly**.
+Photons work across multiple targets (MCP, CLI, programmatic). Method names should be **concise and clear**.
 
 **Core Principle: Avoid Redundancy**
 The photon/class name provides context, so don't repeat it in method names:
@@ -555,9 +555,9 @@ private _resolvePath() { }
 ```
 
 **Test Your Names:**
-Say the CLI command out loud - does it sound natural?
-- ✅ `photon cli time current --timezone "America/New_York"`
-- ❌ `photon cli time getCurrentTime --timezone "America/New_York"`
+Try using the method in different contexts - does it read naturally?
+- ✅ `time.current()` / `photon cli time current`
+- ❌ `time.getCurrentTime()` / `photon cli time getCurrentTime`
 
 ### Modular Structure
 
