@@ -21,7 +21,10 @@
       },
       "license": "MIT",
       "keywords": ["mcp", "photon", "typescript", "code-generation", "agent-skills"],
-      "strict": false
+      "strict": false,
+      "skills": [
+        "generating-photon-mcps"
+      ]
     }
   ]
 }
