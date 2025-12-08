@@ -2,8 +2,7 @@
   "name": "photon-skills",
   "metadata": {
     "description": "Agent Skills for generating Photon MCPs",
-    "version": "1.0.0",
-    "pluginRoot": "."
+    "version": "1.0.0"
   },
   "owner": {
     "name": "Portel",
@@ -12,18 +11,11 @@
   "plugins": [
     {
       "name": "generating-photon-mcps",
-      "source": "./generating-photon-mcps",
       "description": "Generate single-file TypeScript MCPs for the Photon runtime. Use when users request creating an MCP, building an MCP server, or implementing Model Context Protocol tools.",
-      "version": "1.0.0",
-      "author": {
-        "name": "Arul Kumaran",
-        "email": "arul@luracast.com"
-      },
-      "license": "MIT",
-      "keywords": ["mcp", "photon", "typescript", "code-generation", "agent-skills"],
+      "source": "./",
       "strict": false,
       "skills": [
-        "generating-photon-mcps"
+        "./generating-photon-mcps"
       ]
     }
   ]
